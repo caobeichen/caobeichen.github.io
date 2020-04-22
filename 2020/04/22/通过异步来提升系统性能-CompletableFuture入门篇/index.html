@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Jaava,码力，CompletableFuture," />
 
 
 
@@ -94,13 +94,17 @@
 
 
 
-<meta name="description" content="一个厨子">
-<meta property="og:type" content="website">
-<meta property="og:title" content="北辰的铸剑炉">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="我们一般通过异步处理的方式来减少某些线程等待的情况，尤其是需要超高吞吐量和超高延迟的系统中，使用异步处理能够极大的提高系统性能。 最简单的例子就是账号注册功能，可能除了记录或分配一个账号外，还需要初始化其他功能。在我们不考虑失败或者发生异常的情况下，如果这些操作都在一个线程中实现，那么给用户带来的反馈就是：这个系统好慢。如果将绑定邮箱、分配资源能其他功能交给异步线程去处理，体验则会得到很大的提升。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过异步来提升系统性能-CompletableFuture入门篇">
+<meta property="og:url" content="http://yoursite.com/2020/04/22/%E9%80%9A%E8%BF%87%E5%BC%82%E6%AD%A5%E6%9D%A5%E6%8F%90%E5%8D%87%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-CompletableFuture%E5%85%A5%E9%97%A8%E7%AF%87/index.html">
 <meta property="og:site_name" content="北辰的铸剑炉">
-<meta property="og:description" content="一个厨子">
+<meta property="og:description" content="我们一般通过异步处理的方式来减少某些线程等待的情况，尤其是需要超高吞吐量和超高延迟的系统中，使用异步处理能够极大的提高系统性能。 最简单的例子就是账号注册功能，可能除了记录或分配一个账号外，还需要初始化其他功能。在我们不考虑失败或者发生异常的情况下，如果这些操作都在一个线程中实现，那么给用户带来的反馈就是：这个系统好慢。如果将绑定邮箱、分配资源能其他功能交给异步线程去处理，体验则会得到很大的提升。">
+<meta property="article:published_time" content="2020-04-22T08:36:47.000Z">
+<meta property="article:modified_time" content="2020-04-22T08:38:44.305Z">
 <meta property="article:author" content="caobeichen">
+<meta property="article:tag" content="Jaava">
+<meta property="article:tag" content="码力，CompletableFuture">
 <meta name="twitter:card" content="summary">
 
 
@@ -130,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/04/22/通过异步来提升系统性能-CompletableFuture入门篇/"/>
 
 
 
 
 
-  <title>北辰的铸剑炉</title>
+  <title>通过异步来提升系统性能-CompletableFuture入门篇 | 北辰的铸剑炉</title>
   
 
 
@@ -161,9 +165,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -246,9 +248,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -278,9 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/04/22/%E9%80%9A%E8%BF%87%E5%BC%82%E6%AD%A5%E6%9D%A5%E6%8F%90%E5%8D%87%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-CompletableFuture%E5%85%A5%E9%97%A8%E7%AF%87/" itemprop="url">通过异步来提升系统性能-CompletableFuture入门篇</a></h1>
+          <h1 class="post-title" itemprop="name headline">通过异步来提升系统性能-CompletableFuture入门篇</h1>
         
 
         <div class="post-meta">
@@ -352,9 +352,7 @@
       
 
       
-        
-          
-            <p>我们一般通过异步处理的方式来减少某些线程等待的情况，尤其是需要超高吞吐量和超高延迟的系统中，使用异步处理能够极大的提高系统性能。</p>
+        <p>我们一般通过异步处理的方式来减少某些线程等待的情况，尤其是需要超高吞吐量和超高延迟的系统中，使用异步处理能够极大的提高系统性能。</p>
 <p>最简单的例子就是账号注册功能，可能除了记录或分配一个账号外，还需要初始化其他功能。在我们不考虑失败或者发生异常的情况下，如果这些操作都在一个线程中实现，那么给用户带来的反馈就是：这个系统好慢。如果将绑定邮箱、分配资源能其他功能交给异步线程去处理，体验则会得到很大的提升。</p>
 <p>那么如何使用异步处理呢？Java中比较常见的工具有jdk8提供的<a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html" target="_blank" rel="noopener">CompletableFuture</a>和<a href="http://reactivex.io/" target="_blank" rel="noopener">ReactiveX</a>的<a href="https://github.com/ReactiveX/RxJava" target="_blank" rel="noopener">RxJava</a>，本文主要介绍<code>CompletableFuture</code>的入门级使用方法。</p>
 <h4 id="CompletableFuture"><a href="#CompletableFuture" class="headerlink" title="CompletableFuture"></a>CompletableFuture</h4><p>我个人比较常用到的就是<code>CompletableFuture</code>，因为它比较简单实用易理解，<code>CompletableFuture</code>的前世今生有兴趣的同学可以去搜一下，本文不作赘述。下面就通过<code>CompletableFuture</code>来演示一个账号注册功能。</p>
@@ -385,8 +383,6 @@
 
 <p>这里简单的介绍了一下<code>CompletableFuture</code>的简单使用，下一篇将介绍其进阶用法。</p>
 
-          
-        
       
     </div>
     
@@ -401,14 +397,22 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Jaava/" rel="tag"># Jaava</a>
+          
+            <a href="/tags/%E7%A0%81%E5%8A%9B%EF%BC%8CCompletableFuture/" rel="tag"># 码力，CompletableFuture</a>
+          
+        </div>
+      
+
+      
+      
+      
 
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -418,10 +422,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -429,6 +434,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -449,8 +458,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -512,6 +530,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#CompletableFuture"><span class="nav-number">1.</span> <span class="nav-text">CompletableFuture</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -625,10 +659,10 @@
   
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
+
 
   
 
