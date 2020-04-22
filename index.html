@@ -354,38 +354,15 @@
       
         
           
-            <p>我们一般通过异步处理的方式来减少某些线程等待的情况，尤其是需要超高吞吐量和超高延迟的系统中，使用异步处理能够极大的提高系统性能。</p>
-<p>最简单的例子就是账号注册功能，可能除了记录或分配一个账号外，还需要初始化其他功能。在我们不考虑失败或者发生异常的情况下，如果这些操作都在一个线程中实现，那么给用户带来的反馈就是：这个系统好慢。如果将绑定邮箱、分配资源能其他功能交给异步线程去处理，体验则会得到很大的提升。</p>
-<p>那么如何使用异步处理呢？Java中比较常见的工具有jdk8提供的<a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html" target="_blank" rel="noopener">CompletableFuture</a>和<a href="http://reactivex.io/" target="_blank" rel="noopener">ReactiveX</a>的<a href="https://github.com/ReactiveX/RxJava" target="_blank" rel="noopener">RxJava</a>，本文主要介绍<code>CompletableFuture</code>的入门级使用方法。</p>
-<h4 id="CompletableFuture"><a href="#CompletableFuture" class="headerlink" title="CompletableFuture"></a>CompletableFuture</h4><p>我个人比较常用到的就是<code>CompletableFuture</code>，因为它比较简单实用易理解，<code>CompletableFuture</code>的前世今生有兴趣的同学可以去搜一下，本文不作赘述。下面就通过<code>CompletableFuture</code>来演示一个账号注册功能。</p>
-<p>首先创建两个服务，分别代表验证邮箱和分配内部资源，这里为了方便我使用静态方法来进行处理。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EmailVerifService</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">emailVerif</span><span class="params">(Account account)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> CompletableFuture.runAsync(() -&gt; &#123;</span><br><span class="line">            System.out.println(<span class="string">"验证邮箱："</span> + account.getEmail());</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InnerIdGenService</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">genInnerId</span><span class="params">(Account account)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> CompletableFuture.runAsync(() -&gt; &#123;</span><br><span class="line">            System.out.println(<span class="string">"生成内部ID："</span> + <span class="string">"ASDFGH123"</span>);</span><br><span class="line">        &#125;); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>每一个服务都会返回一个<code>CompletableFuture</code>对象，服务的具体执行内容封装在一个线程中。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">runAsync</span><span class="params">(Runnable runnable)</span> </span>&#123;   </span><br><span class="line">    <span class="keyword">return</span> asyncRunStage(ASYNC_POOL, runnable);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>runAsync()</code>是指运行异步计算，他入参为一个<code>Runnable</code>对象，这里就是封装我们服务具体执行内容的线程。如果我们不想或者是不需要得到线程内执行结果的话，可以使用这个方法。如果我们需要得到具体执行结果的话，就必须使用<code>supplyAsync()</code>。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier)</span> </span>&#123; </span><br><span class="line">    <span class="keyword">return</span> asyncSupplyStage(ASYNC_POOL, supplier);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>supplyAsync()</code>会执行线程并返回一个结果，其中<code>U</code>即我们想要得到的结果的类型。<code>Supplier</code>是一个函数式接口，封装了一个<code>get()</code>，通过调用此方法获取执行结果。<code>get()</code>方法是阻塞的，调用线程会等待执行完成之后才继续执行，这显然违背了我们的初衷，<code>CompletableFuture</code>也给出了解决方案，我们放到后面说。</p>
-<p>上面我们构建了两个服务，分别对应着账户创建中需要异步执行的两个服务方法，那么我们应该怎么使用？下面给出一个简单的例子来说明：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">genAccount</span><span class="params">(Account account)</span> </span>&#123; </span><br><span class="line">    EmailVerifService.emailVerif(account).thenRun(() -&gt; &#123; </span><br><span class="line">        System.out.println(<span class="string">"邮箱验证完成"</span>);    </span><br><span class="line">    &#125;);    </span><br><span class="line">    InnerIdGenService.genInnerId(account).thenRun(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">"内部ID创建完成"</span>);  </span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>由于创建的两个服务均未有返回，因此使用<code>thenRun()</code>来处理。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenRun</span><span class="params">(Runnable action)</span> </span>&#123;   </span><br><span class="line">    <span class="keyword">return</span> uniRunStage(<span class="keyword">null</span>, action);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果我们拿到的<code>CompletableFuture</code>有返回，那么需要使用<code>thenApply()</code>来处理，具体的使用如下</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">thenApply</span><span class="params">(    Function&lt;? <span class="keyword">super</span> T,? extends U&gt; fn)</span></span>&#123;   	     <span class="keyword">return</span> uniApplyStage(<span class="keyword">null</span>, fn);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">InnerIdGenService.genInnerId(account).thenApply(innerId -&gt; &#123;     </span><br><span class="line">    <span class="keyword">return</span> innerId;        </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-
-
-<p>这里简单的介绍了一下<code>CompletableFuture</code>的简单使用，下一篇将介绍其进阶用法。</p>
-
-          
+          我们一般通过异步处理的方式来减少某些线程等待的情况，尤其是需要超高吞吐量和超高延迟的系统中，使用异步
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/04/22/%E9%80%9A%E8%BF%87%E5%BC%82%E6%AD%A5%E6%9D%A5%E6%8F%90%E5%8D%87%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-CompletableFuture%E5%85%A5%E9%97%A8%E7%AF%87/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
