@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Java,码力,CompletableFuture," />
+  <meta name="keywords" content="Jaava,码力,CompletableFuture," />
 
 
 
@@ -96,14 +96,14 @@
 
 <meta name="description" content="我们一般通过异步处理的方式来减少某些线程等待的情况，尤其是需要超高吞吐量和超高延迟的系统中，使用异步处理能够极大的提高系统性能。 最简单的例子就是账号注册功能，可能除了记录或分配一个账号外，还需要初始化其他功能。在我们不考虑失败或者发生异常的情况下，如果这些操作都在一个线程中实现，那么给用户带来的反馈就是：这个系统好慢。如果将绑定邮箱、分配资源能其他功能交给异步线程去处理，体验则会得到很大的提升。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="通过异步来提升系统性能-CompletableFuture入门篇">
-<meta property="og:url" content="http://yoursite.com/2020/04/22/%E9%80%9A%E8%BF%87%E5%BC%82%E6%AD%A5%E6%9D%A5%E6%8F%90%E5%8D%87%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-CompletableFuture%E5%85%A5%E9%97%A8%E7%AF%87/index.html">
+<meta property="og:title" content="通过异步来提升系统性能-CompletableFuture">
+<meta property="og:url" content="http://yoursite.com/2020/04/22/%E9%80%9A%E8%BF%87%E5%BC%82%E6%AD%A5%E6%9D%A5%E6%8F%90%E5%8D%87%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-CompletableFuture/index.html">
 <meta property="og:site_name" content="北辰的铸剑炉">
 <meta property="og:description" content="我们一般通过异步处理的方式来减少某些线程等待的情况，尤其是需要超高吞吐量和超高延迟的系统中，使用异步处理能够极大的提高系统性能。 最简单的例子就是账号注册功能，可能除了记录或分配一个账号外，还需要初始化其他功能。在我们不考虑失败或者发生异常的情况下，如果这些操作都在一个线程中实现，那么给用户带来的反馈就是：这个系统好慢。如果将绑定邮箱、分配资源能其他功能交给异步线程去处理，体验则会得到很大的提升。">
 <meta property="article:published_time" content="2020-04-22T08:36:47.000Z">
-<meta property="article:modified_time" content="2020-04-22T08:55:07.645Z">
+<meta property="article:modified_time" content="2020-04-23T07:43:43.322Z">
 <meta property="article:author" content="caobeichen">
-<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Jaava">
 <meta property="article:tag" content="码力">
 <meta property="article:tag" content="CompletableFuture">
 <meta name="twitter:card" content="summary">
@@ -135,13 +135,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/04/22/通过异步来提升系统性能-CompletableFuture入门篇/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/04/22/通过异步来提升系统性能-CompletableFuture/"/>
 
 
 
 
 
-  <title>通过异步来提升系统性能-CompletableFuture入门篇 | 北辰的铸剑炉</title>
+  <title>通过异步来提升系统性能-CompletableFuture | 北辰的铸剑炉</title>
   
 
 
@@ -264,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/22/%E9%80%9A%E8%BF%87%E5%BC%82%E6%AD%A5%E6%9D%A5%E6%8F%90%E5%8D%87%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-CompletableFuture%E5%85%A5%E9%97%A8%E7%AF%87/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/22/%E9%80%9A%E8%BF%87%E5%BC%82%E6%AD%A5%E6%9D%A5%E6%8F%90%E5%8D%87%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-CompletableFuture/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="caobeichen">
@@ -281,7 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">通过异步来提升系统性能-CompletableFuture入门篇</h1>
+          <h1 class="post-title" itemprop="name headline">通过异步来提升系统性能-CompletableFuture</h1>
         
 
         <div class="post-meta">
@@ -355,8 +355,8 @@
       
         <p>我们一般通过异步处理的方式来减少某些线程等待的情况，尤其是需要超高吞吐量和超高延迟的系统中，使用异步处理能够极大的提高系统性能。</p>
 <p>最简单的例子就是账号注册功能，可能除了记录或分配一个账号外，还需要初始化其他功能。在我们不考虑失败或者发生异常的情况下，如果这些操作都在一个线程中实现，那么给用户带来的反馈就是：这个系统好慢。如果将绑定邮箱、分配资源能其他功能交给异步线程去处理，体验则会得到很大的提升。</p>
-<p>那么如何使用异步处理呢？Java中比较常见的工具有jdk8提供的<a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html" target="_blank" rel="noopener">CompletableFuture</a>和<a href="http://reactivex.io/" target="_blank" rel="noopener">ReactiveX</a>的<a href="https://github.com/ReactiveX/RxJava" target="_blank" rel="noopener">RxJava</a>，本文主要介绍<code>CompletableFuture</code>的入门级使用方法。</p>
-<h4 id="CompletableFuture"><a href="#CompletableFuture" class="headerlink" title="CompletableFuture"></a>CompletableFuture</h4><p>我个人比较常用到的就是<code>CompletableFuture</code>，因为它比较简单实用易理解，<code>CompletableFuture</code>的前世今生有兴趣的同学可以去搜一下，本文不作赘述。下面就通过<code>CompletableFuture</code>来演示一个账号注册功能。</p>
+<p>那么如何使用异步处理呢？Java中比较常见的工具有jdk8提供的<a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html" target="_blank" rel="noopener">CompletableFuture</a>和<a href="http://reactivex.io/" target="_blank" rel="noopener">ReactiveX</a>的<a href="https://github.com/ReactiveX/RxJava" target="_blank" rel="noopener">RxJava</a>，本文主要介绍<code>CompletableFuture</code>的使用方法。</p>
+<h4 id="CompletableFuture使用方法"><a href="#CompletableFuture使用方法" class="headerlink" title="CompletableFuture使用方法"></a>CompletableFuture使用方法</h4><p>我个人比较常用到的就是<code>CompletableFuture</code>，因为它比较简单实用易理解，<code>CompletableFuture</code>的前世今生有兴趣的同学可以去搜一下，本文不作赘述。下面就通过<code>CompletableFuture</code>来演示一个账号注册功能。</p>
 <p>首先创建两个服务，分别代表验证邮箱和分配内部资源，这里为了方便我使用静态方法来进行处理。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EmailVerifService</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">emailVerif</span><span class="params">(Account account)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> CompletableFuture.runAsync(() -&gt; &#123;</span><br><span class="line">            System.out.println(<span class="string">"验证邮箱："</span> + account.getEmail());</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -382,7 +382,31 @@
 
 
 
-<p>这里简单的介绍了一下<code>CompletableFuture</code>的简单使用，下一篇将介绍其进阶用法。</p>
+<h4 id="CompletableFuture一些常用功能"><a href="#CompletableFuture一些常用功能" class="headerlink" title="CompletableFuture一些常用功能"></a>CompletableFuture一些常用功能</h4><h6 id="组合CompletableFuture"><a href="#组合CompletableFuture" class="headerlink" title="组合CompletableFuture"></a>组合CompletableFuture</h6><p>假如有这么一个场景，我们的账号注册功能中注册内部ID必须只能在邮箱验证成功之后才能进行其相关服务操作。首先修改验证邮箱的服务，这里为了简单模拟，我们采用一个默认参数来作为校验的结果，校验过程省略。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Account&gt; <span class="title">emailVerif</span><span class="params">(Account account)</span> </span>&#123; </span><br><span class="line">    <span class="keyword">return</span> CompletableFuture.supplyAsync(() -&gt; &#123; </span><br><span class="line">        account.setVersion(account.getVersion() + <span class="number">1</span>); </span><br><span class="line">        System.out.println(<span class="string">"验证邮箱："</span> + account.getEmail());   </span><br><span class="line">        <span class="comment">// 这里假设邮箱验证结果已经完成  </span></span><br><span class="line">        account.setEmailValidResult(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//            account.setEmailValidResult(false);  </span></span><br><span class="line">        <span class="keyword">return</span> account;       </span><br><span class="line">    &#125;);    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后注册内部ID的相关服务，则需要去根据邮箱校验的结果来去决策。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Account&gt; <span class="title">genInnerId</span><span class="params">(Account account)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> CompletableFuture.supplyAsync(() -&gt; &#123; </span><br><span class="line">        <span class="keyword">if</span> (account.getEmailValidResult()) &#123;   </span><br><span class="line">            account.setVersion(account.getVersion() + <span class="number">1</span>); </span><br><span class="line">            account.setInnerId(<span class="string">"ASDFGH123"</span>);      </span><br><span class="line">            System.out.println(<span class="string">"生成内部ID："</span> + <span class="string">"ASDFGH123"</span>);    </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;           </span><br><span class="line">            System.out.println(<span class="string">"邮箱校验失败，无法进行内部ID生成。"</span>);  </span><br><span class="line">        &#125;       </span><br><span class="line">        <span class="keyword">return</span> account;   </span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么问题来了，如何组合这两个<code>CompletableFuture</code>？，答案是如果一个服务依赖于另外一个服务的结果，那么需要使用<code>thenCompose()</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">thenCompose</span><span class="params">(    Function&lt;? <span class="keyword">super</span> T, ? extends CompletionStage&lt;U&gt;&gt; fn)</span> </span>&#123; </span><br><span class="line">    <span class="keyword">return</span> uniComposeStage(<span class="keyword">null</span>, fn);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EmailVerifService.emailVerif(account).thenCompose(rst -		 &gt;InnerIdGenService.genInnerId(rst));</span><br></pre></td></tr></table></figure>
+
+<p>如果是两个相对独立的服务需要组合，要根据两个服务执行的结果进行决策时，就需要使用<code>thenCombine()</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U,V&gt; <span class="function">CompletableFuture&lt;V&gt; <span class="title">thenCombine</span><span class="params">(   </span></span></span><br><span class="line"><span class="function"><span class="params">    CompletionStage&lt;? extends U&gt; other,    BiFunction&lt;? <span class="keyword">super</span> T,? <span class="keyword">super</span> U,? extends V&gt; fn)</span> </span>&#123;    </span><br><span class="line">    <span class="keyword">return</span> biApplyStage(<span class="keyword">null</span>, other, fn);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以试着用一下，创建第三个服务，短信服务，他会根据其他两个服务的结果来验证服务来决定发给使用者短信的内容。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MessageService</span> </span>&#123;   </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Account&gt; <span class="title">messageSend</span><span class="params">(Account ers,Account irs)</span> </span>&#123; </span><br><span class="line">        <span class="keyword">return</span> CompletableFuture.supplyAsync(() -&gt; &#123;      </span><br><span class="line">            <span class="keyword">if</span> (ers.getEmailValidResult() &amp;&amp; !StringUtils.isEmpty(irs.getInnerId())) &#123;  </span><br><span class="line">                System.out.println(<span class="string">"您的账号已经注册完成."</span>);      </span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;               </span><br><span class="line">                System.out.println(<span class="string">"您的账号注册失败，原因是："</span> + (ers.getEmailValidResult() ?                        <span class="string">"内部ID注册失败。"</span> : <span class="string">"邮箱验证不通过。"</span>));      </span><br><span class="line">            &#125;            <span class="keyword">return</span> ers;   </span><br><span class="line">        &#125;);  </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EmailVerifService.emailVerif(account).thenCombine(InnerIdGenService.genInnerId(account),        (ers,irs) -&gt; MessageService.messageSend(ers,irs));</span><br></pre></td></tr></table></figure>
+
+<h6 id="组合多个CompletableFuture"><a href="#组合多个CompletableFuture" class="headerlink" title="组合多个CompletableFuture"></a>组合多个CompletableFuture</h6><p>上面是使用<code>thenCompose()</code>和 <code>thenCombine()</code>把两个<code>CompletableFuture</code>组合在一起，如果想组合任意数量的<code>CompletableFuture</code>，则可以使用以下两种方法来进行操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">allOf</span><span class="params">(CompletableFuture&lt;?&gt;... cfs)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Object&gt; <span class="title">anyOf</span><span class="params">(CompletableFuture&lt;?&gt;... cfs)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>allOf</code>的使用场景可以这样说：我账号创建的后续服务有100个，每一个都需要执行，那么我就可以通过使用这个方法，来对100个服务的执行结果进行统一操作。</p>
+<p><code>anyOf</code>，顾名思义，就是任意一个，如果任意一个future完成，那么这个方法就会执行。</p>
+<p>好了，关于<code>CompletableFuture</code>的简单介绍就到这里了，如果您对本文有一些想法或者想给我提一些建议，欢迎<a href="lushe.yc@gmail.com">联系我</a>。</p>
 
       
     </div>
@@ -400,7 +424,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Java/" rel="tag"># Java</a>
+            <a href="/tags/Jaava/" rel="tag"># Jaava</a>
           
             <a href="/tags/%E7%A0%81%E5%8A%9B/" rel="tag"># 码力</a>
           
@@ -543,7 +567,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#CompletableFuture"><span class="nav-number">1.</span> <span class="nav-text">CompletableFuture</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#CompletableFuture使用方法"><span class="nav-number">1.</span> <span class="nav-text">CompletableFuture使用方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CompletableFuture一些常用功能"><span class="nav-number">2.</span> <span class="nav-text">CompletableFuture一些常用功能</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#组合CompletableFuture"><span class="nav-number">2.0.1.</span> <span class="nav-text">组合CompletableFuture</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#组合多个CompletableFuture"><span class="nav-number">2.0.2.</span> <span class="nav-text">组合多个CompletableFuture</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
