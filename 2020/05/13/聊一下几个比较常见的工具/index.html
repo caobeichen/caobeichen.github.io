@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="码力," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="害，五一就这么过去了。本来的想法是好好研究一下Netty相关的东西，然后试着自己实现一个rpc协议。但是因为要搬家再加上一些其他的琐事，这个事情就泡汤了。看看社区论坛里那些大佬假期里又研究出了什么学到了什么，感觉自己和他们的差距真的就是这样产生的。不说这些了，知耻而后勇吧！ 在我们日常的工作开发中，接触到的项目工程有大有小，但有一些基础组件或者工具可能会重复用到，下面我总结一下我在平时开发中可能会">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊一下几个比较常见的工具">
+<meta property="og:url" content="http://yoursite.com/2020/05/13/%E8%81%8A%E4%B8%80%E4%B8%8B%E5%87%A0%E4%B8%AA%E6%AF%94%E8%BE%83%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B7%A5%E5%85%B7/index.html">
+<meta property="og:site_name" content="北辰的铸剑炉">
+<meta property="og:description" content="害，五一就这么过去了。本来的想法是好好研究一下Netty相关的东西，然后试着自己实现一个rpc协议。但是因为要搬家再加上一些其他的琐事，这个事情就泡汤了。看看社区论坛里那些大佬假期里又研究出了什么学到了什么，感觉自己和他们的差距真的就是这样产生的。不说这些了，知耻而后勇吧！ 在我们日常的工作开发中，接触到的项目工程有大有小，但有一些基础组件或者工具可能会重复用到，下面我总结一下我在平时开发中可能会">
+<meta property="article:published_time" content="2020-05-13T13:31:12.000Z">
+<meta property="article:modified_time" content="2020-05-13T07:55:33.134Z">
+<meta property="article:author" content="caobeichen">
+<meta property="article:tag" content="码力">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/13/聊一下几个比较常见的工具/"/>
+
+
+
+
+
+  <title>聊一下几个比较常见的工具 | 北辰的铸剑炉</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北辰的铸剑炉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">北辰的铸剑炉</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/13/%E8%81%8A%E4%B8%80%E4%B8%8B%E5%87%A0%E4%B8%AA%E6%AF%94%E8%BE%83%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B7%A5%E5%85%B7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caobeichen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北辰的铸剑炉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">聊一下几个比较常见的工具</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-13T21:31:12+08:00">
+                2020-05-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BB%8F%E9%AA%8C/" itemprop="url" rel="index">
+                    <span itemprop="name">经验</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>害，五一就这么过去了。本来的想法是好好研究一下Netty相关的东西，然后试着自己实现一个rpc协议。但是因为要搬家再加上一些其他的琐事，这个事情就泡汤了。看看社区论坛里那些大佬假期里又研究出了什么学到了什么，感觉自己和他们的差距真的就是这样产生的。不说这些了，知耻而后勇吧！</p>
+<p>在我们日常的工作开发中，接触到的项目工程有大有小，但有一些基础组件或者工具可能会重复用到，下面我总结一下我在平时开发中可能会常用到的一些工具。</p>
+<h4 id="LRU缓存"><a href="#LRU缓存" class="headerlink" title="LRU缓存"></a>LRU缓存</h4><p>所谓LRU，就是Least Recently Used（最近少使用）。因为从内存中直接拿东西远比通过网络通信拿东西要快的多，于是我们经常在内存中创建一个缓存，来存储一些我们用到过或者可能会用到的数据。内存就那么点地，不可能存放所有的东西，所以我们要有策略的舍去一些已经存放的数据，来存放对我们更有用的东西。舍去的方式有很多，这里所列举的就是通过最近使用时间来计算出应该舍去哪些数据的方式。</p>
+<p>实现LRU缓存，那么绝对绕不开<code>LinkedHashMap</code>。它的一些基础属性，如何存取数据的方式我不在这详解，有兴趣的同学可以去看一下它的源码。关键在于<code>LinkedHashMap</code>的构造函数参数中有一个属性：accessOrder。这个参数的意思是它决定了我们初始化的map，会基于什么样的规则去访问。如果它为false，那么就是基于插入顺序来遍历，越后插入的数据放在队尾。如果它为true，那么就是基于访问顺序，可以理解为访问即为一次新插入。</p>
+<p>那么就很简单了，通过合理配置accessOrder的值，我们就可以得到一个队列，这个队列的头是访问时间最久远的数据，队列尾则是访问时间最近的数据。</p>
+<p>那么我们很容易就能构造出一个LRU缓存，这里我贴一下一个简单的实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LRUCache</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">LinkedHashMap</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>&#123; </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> loadFactor;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> maxSize; </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">4</span>;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75f</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LRUCache</span><span class="params">(<span class="keyword">int</span> maxSize)</span> </span>&#123; </span><br><span class="line">        <span class="keyword">super</span>(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR, <span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">this</span>.maxSize = maxSize;</span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LRUCache</span><span class="params">(<span class="keyword">int</span> initialCapacity, <span class="keyword">int</span> maxSize)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(initialCapacity, DEFAULT_LOAD_FACTOR, <span class="keyword">true</span>); </span><br><span class="line">        <span class="keyword">this</span>.loadFactor = DEFAULT_LOAD_FACTOR; </span><br><span class="line">        <span class="keyword">this</span>.maxSize = maxSize; </span><br><span class="line">    &#125;   </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LRUCache</span><span class="params">(<span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor, <span class="keyword">int</span> maxSize)</span> </span>&#123; </span><br><span class="line">        <span class="keyword">super</span>(initialCapacity, loadFactor, <span class="keyword">true</span>);   </span><br><span class="line">        <span class="keyword">this</span>.loadFactor = loadFactor; </span><br><span class="line">        <span class="keyword">this</span>.maxSize = maxSize;   </span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">needRemove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> size() &gt;= <span class="keyword">this</span>.maxSize; </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">removeLRU</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Iterator&lt;Map.Entry&lt;K, V&gt;&gt; it = <span class="keyword">this</span>.entrySet().iterator();   </span><br><span class="line">        <span class="keyword">while</span> (it.hasNext()) &#123; </span><br><span class="line">            Map.Entry&lt;K, V&gt; key = it.next();</span><br><span class="line">            <span class="keyword">this</span>.remove(key.getKey()); </span><br><span class="line">            <span class="keyword">break</span>;       </span><br><span class="line">        &#125;   </span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="meta">@Override</span> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (needRemove()) removeLRU();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.put(key, value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后我们简单测试一下，创建一个lrucache，然后设置最多存储4个数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">LRUCache&lt;String, Integer&gt; lruCache = <span class="keyword">new</span> LRUCache&lt;String, Integer&gt;(<span class="number">4</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; <span class="number">20</span>; i++) &#123;  </span><br><span class="line">    System.out.println(<span class="string">"###### 插入"</span> + i + <span class="string">"########"</span>);</span><br><span class="line">    lruCache.put(i + <span class="string">""</span>, i);  </span><br><span class="line">    Iterator&lt;Map.Entry&lt;String, Integer&gt;&gt; it = lruCache.entrySet().iterator();</span><br><span class="line">    <span class="keyword">while</span> (it.hasNext()) &#123; </span><br><span class="line">        Map.Entry&lt;String, Integer&gt; key = it.next();</span><br><span class="line">        System.out.println(key);    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输入结果看一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">###### 插入1########</span><br><span class="line">1&#x3D;1</span><br><span class="line">###### 插入2########</span><br><span class="line">1&#x3D;1</span><br><span class="line">2&#x3D;2</span><br><span class="line">###### 插入3########</span><br><span class="line">1&#x3D;1</span><br><span class="line">2&#x3D;2</span><br><span class="line">3&#x3D;3</span><br><span class="line">###### 插入4########</span><br><span class="line">1&#x3D;1</span><br><span class="line">2&#x3D;2</span><br><span class="line">3&#x3D;3</span><br><span class="line">4&#x3D;4</span><br><span class="line">###### 插入5########</span><br><span class="line">2&#x3D;2</span><br><span class="line">3&#x3D;3</span><br><span class="line">4&#x3D;4</span><br><span class="line">5&#x3D;5</span><br><span class="line">###### 插入6########</span><br><span class="line">3&#x3D;3</span><br><span class="line">4&#x3D;4</span><br><span class="line">5&#x3D;5</span><br><span class="line">6&#x3D;6</span><br><span class="line">###### 插入7########</span><br><span class="line">4&#x3D;4</span><br><span class="line">5&#x3D;5</span><br><span class="line">6&#x3D;6</span><br><span class="line">7&#x3D;7</span><br><span class="line">###### 插入8########</span><br><span class="line">5&#x3D;5</span><br><span class="line">6&#x3D;6</span><br><span class="line">7&#x3D;7</span><br><span class="line">8&#x3D;8</span><br><span class="line">###### 插入9########</span><br><span class="line">6&#x3D;6</span><br><span class="line">7&#x3D;7</span><br><span class="line">8&#x3D;8</span><br><span class="line">9&#x3D;9</span><br><span class="line">###### 插入10########</span><br><span class="line">7&#x3D;7</span><br><span class="line">8&#x3D;8</span><br><span class="line">9&#x3D;9</span><br><span class="line">10&#x3D;10</span><br><span class="line">###### 插入11########</span><br><span class="line">8&#x3D;8</span><br><span class="line">9&#x3D;9</span><br><span class="line">10&#x3D;10</span><br><span class="line">11&#x3D;11</span><br><span class="line">###### 插入12########</span><br><span class="line">9&#x3D;9</span><br><span class="line">10&#x3D;10</span><br><span class="line">11&#x3D;11</span><br><span class="line">12&#x3D;12</span><br><span class="line">###### 插入13########</span><br><span class="line">10&#x3D;10</span><br><span class="line">11&#x3D;11</span><br><span class="line">12&#x3D;12</span><br><span class="line">13&#x3D;13</span><br><span class="line">###### 插入14########</span><br><span class="line">11&#x3D;11</span><br><span class="line">12&#x3D;12</span><br><span class="line">13&#x3D;13</span><br><span class="line">14&#x3D;14</span><br><span class="line">###### 插入15########</span><br><span class="line">12&#x3D;12</span><br><span class="line">13&#x3D;13</span><br><span class="line">14&#x3D;14</span><br><span class="line">15&#x3D;15</span><br><span class="line">###### 插入16########</span><br><span class="line">13&#x3D;13</span><br><span class="line">14&#x3D;14</span><br><span class="line">15&#x3D;15</span><br><span class="line">16&#x3D;16</span><br><span class="line">###### 插入17########</span><br><span class="line">14&#x3D;14</span><br><span class="line">15&#x3D;15</span><br><span class="line">16&#x3D;16</span><br><span class="line">17&#x3D;17</span><br><span class="line">###### 插入18########</span><br><span class="line">15&#x3D;15</span><br><span class="line">16&#x3D;16</span><br><span class="line">17&#x3D;17</span><br><span class="line">18&#x3D;18</span><br><span class="line">###### 插入19########</span><br><span class="line">16&#x3D;16</span><br><span class="line">17&#x3D;17</span><br><span class="line">18&#x3D;18</span><br><span class="line">19&#x3D;19</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="延时队列"><a href="#延时队列" class="headerlink" title="延时队列"></a>延时队列</h4><p>延时队列在我们平时的应用也很广泛。何谓延时队列？首先它是一个队列，其次他能够进行延时（感觉在说废话）。</p>
+<p>拿个场景来举例：用户在买房的过程中，如果到了需要持有摇号指标去选房的阶段，一般销售会规定你在1分钟内选好房屋。因为疫情的原因，这一块需要放到网上来进行操作。那么我们应该怎么设计选房系统呢？</p>
+<p>这里就会使用到jdk的原始类–<code>DelayQueue</code>。它的原理就是在向队列添加元素时，<code>DelayQueue</code>会按照延迟时间作为排序条件进行排序。只有当队列里的元素到了延迟时间，才被满足取出。</p>
+<p><code>DelayQueue</code>的元素必须继承<code>Delayed</code>，需要在类里面配置比较方法，和延时时间判断。</p>
+<p>这里我们创建一个类，用他来作为选房人手里的指标，此类的实例将作为延时队列中的元素来帮助我们模拟这个场景。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Index</span> <span class="keyword">implements</span> <span class="title">Delayed</span> </span>&#123; </span><br><span class="line">    <span class="keyword">private</span> String indexOwnerName; </span><br><span class="line">    <span class="meta">@JsonFormat</span>(locale = <span class="string">"zh"</span>, timezone = <span class="string">"GMT+8"</span>, pattern = <span class="string">"yyyy-MM-dd HH:mm:ss"</span>)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> time;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Index</span><span class="params">(String indexOwnerName, <span class="keyword">long</span> time, TimeUnit unit)</span> </span>&#123; </span><br><span class="line">        <span class="keyword">this</span>.indexOwnerName = indexOwnerName;</span><br><span class="line">        <span class="keyword">this</span>.time = System.currentTimeMillis() + (time &gt; <span class="number">0</span> ? unit.toMillis(time) : <span class="number">0</span>);</span><br><span class="line">        System.out.format(<span class="string">"%s选房开始,开始时间为:%s\n"</span>, indexOwnerName, LocalDateTime.now().format(DateTimeFormatter.ofPattern(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>)));</span><br><span class="line">    &#125;       </span><br><span class="line">    <span class="meta">@Override</span>   </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getDelay</span><span class="params">(TimeUnit unit)</span> </span>&#123; </span><br><span class="line">        <span class="keyword">return</span> time - System.currentTimeMillis();</span><br><span class="line">    &#125;   </span><br><span class="line">    <span class="meta">@Override</span>   </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(Delayed o)</span> </span>&#123; </span><br><span class="line">        Index index = (Index) o;   </span><br><span class="line">        <span class="keyword">long</span> diff = <span class="keyword">this</span>.time - index.time;</span><br><span class="line">        <span class="keyword">if</span> (diff &gt; <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> -<span class="number">1</span>;    </span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getIndexOwnerName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> indexOwnerName; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后模拟摇号场景</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">DelayQueue&lt;Index&gt; queue = <span class="keyword">new</span> DelayQueue&lt;&gt;();</span><br><span class="line">Index zs = <span class="keyword">new</span> Index(<span class="string">"张三"</span>,<span class="number">1</span>, TimeUnit.MINUTES);</span><br><span class="line">queue.put(zs);Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">Index ls = <span class="keyword">new</span> Index(<span class="string">"李四"</span>,<span class="number">1</span>, TimeUnit.MINUTES);</span><br><span class="line">queue.put(ls);Thread.sleep(<span class="number">5000</span>);</span><br><span class="line">Index ww = <span class="keyword">new</span> Index(<span class="string">"王五"</span>,<span class="number">1</span>, TimeUnit.MINUTES);</span><br><span class="line">queue.put(ww);</span><br><span class="line"><span class="keyword">while</span>(queue.size() &gt; <span class="number">0</span>) &#123; </span><br><span class="line">    Index index = queue.poll(); </span><br><span class="line">    <span class="keyword">if</span> (index != <span class="keyword">null</span>) &#123; </span><br><span class="line">        System.out.format(<span class="string">"%s选房结束,选房时间为:%s\n"</span>,index.getIndexOwnerName(), LocalDateTime.now().format(DateTimeFormatter.ofPattern(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>)));   </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后模拟出的结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">张三选房开始,开始时间为:2020-05-13 15:44:37</span><br><span class="line">李四选房开始,开始时间为:2020-05-13 15:44:39</span><br><span class="line">王五选房开始,开始时间为:2020-05-13 15:44:44</span><br><span class="line">张三选房结束,选房时间为:2020-05-13 15:45:37</span><br><span class="line">李四选房结束,选房时间为:2020-05-13 15:45:39</span><br><span class="line">王五选房结束,选房时间为:2020-05-13 15:45:44</span><br></pre></td></tr></table></figure>
+
+<p>一个简单的摇号过程就模拟完毕了，这里只是简单地展示了延时队列在处理这种业务场景可以发挥的作用，离真的场景中复杂的业务逻辑还差很远。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%A0%81%E5%8A%9B/" rel="tag"># 码力</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/27/%E8%81%8A%E8%81%8A%E5%BC%80%E5%8F%91%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/" rel="next" title="聊聊开发过程中遇到的坑">
+                <i class="fa fa-chevron-left"></i> 聊聊开发过程中遇到的坑
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="caobeichen" />
+          <p class="site-author-name" itemprop="name">caobeichen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个厨子</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#LRU缓存"><span class="nav-number">1.</span> <span class="nav-text">LRU缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#延时队列"><span class="nav-number">2.</span> <span class="nav-text">延时队列</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caobeichen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
